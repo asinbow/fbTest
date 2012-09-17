@@ -33,6 +33,7 @@ public:
     {
         registerMethod("echo",      make_method(this, &AsinbowAPI::echo));
         registerMethod("testEvent", make_method(this, &AsinbowAPI::testEvent));
+        registerMethod("executeCommand", make_method(this, &AsinbowAPI::executeCommand));
         
         // Read-write property
         registerProperty("testString",
@@ -73,6 +74,7 @@ public:
 
     // Method test-event
     void testEvent();
+    std::string executeCommand(const std::string& command);
 
 private:
     AsinbowWeakPtr m_plugin;

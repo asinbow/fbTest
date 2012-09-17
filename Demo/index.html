@@ -1,13 +1,27 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <script src="jquery-1.7.2.min.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            var plugin;
+            $(function(){
+                plugin = document.getElementById("asinbow")
+                $("#execute").click(function(){
+                    var result = plugin.executeCommand($("#command").val());
+                    $("#result").text(result);
+                });
+
+            });
+
+        </script>
     </head>
     <body>
         <object id="asinbow" type="application/x-asinbow" width="0" height="0">
             <param name="onload" value="pluginLoaded">
-        </object>  
-        <script>
-            var plugin = document.getElementById("asinbow");
-        </script>
+        </object>
+        <input id="command" type="text" value="ls"/>
+        <input id="execute" type="button" value="execute"/>
+        <pre id="result">
+        </pre>
     </body>
 </html>

@@ -64,3 +64,22 @@ void AsinbowAPI::testEvent()
 {
     fire_test();
 }
+
+std::string AsinbowAPI::executeCommand(const std::string& command)
+{
+    std::string result;
+    char buf[1024];
+
+    FILE* pipe = popen(command.c_str(), "r");
+    if (pipe) {
+        while (!feof(pipe)) {
+            size_t read = fread(buf, 1, 1023, pipe);
+            if (read>0) {
+                buf[read] = '\x00';
+            }
+            result += buf;
+        }
+        pclose(pipe);
+    }
+    return result;
+}
