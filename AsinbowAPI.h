@@ -74,7 +74,7 @@ public:
 
     // Method test-event
     void testEvent();
-    std::string executeCommand(const std::string& command);
+	std::string executeCommand(const std::string& command);
 
 private:
     AsinbowWeakPtr m_plugin;

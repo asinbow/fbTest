@@ -15,6 +15,17 @@
 
 #include "PluginCore.h"
 
+#ifdef _WIN32
+
+#define popen _popen
+#define pclose _pclose
+#include "Win/encoding.h"
+
+#else
+
+
+#endif
+
 
 FB_FORWARD_PTR(Asinbow)
 class Asinbow : public FB::PluginCore
