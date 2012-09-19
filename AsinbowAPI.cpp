@@ -8,6 +8,7 @@
 #include "variant_list.h"
 #include "DOM/Document.h"
 #include "global/config.h"
+#include <boost/format.hpp>
 
 #include "AsinbowAPI.h"
 
@@ -75,19 +76,28 @@ void AsinbowAPI::executeCommandWork(const std::string& command, const FB::JSObje
         command.c_str(),
 #endif
         "r");
-    if (pipe) {
-        while (!feof(pipe)) {
-            size_t read = fread(buf, sizeof(char), 4096, pipe);
-            if (read>0) {
-                result += std::string(buf, read);
+    if (!pipe) {
+        callback->Invoke("", FB::variant_list_of(false)("popen failed!"));
+        return;
+    }
+    while (!feof(pipe)) {
+        size_t read = fread(buf, sizeof(char), 4096, pipe);
+        if (read>0) {
+            result += std::string(buf, read*sizeof(char));
+        } else {
+            int error = ferror(pipe);
+            if (error) {
+                std::string e = boost::str(boost::format("read pipe error: %1%") % error);
+                callback->Invoke("", FB::variant_list_of(true)(e));
+                return;
             }
         }
-        pclose(pipe);
     }
+    pclose(pipe);
 #ifdef _WIN32
     result = ansi_to_utf8(result);
 #endif
-    callback->Invoke("", FB::variant_list_of(result));
+    callback->Invoke("", FB::variant_list_of(true)(result));
 }
 
 void AsinbowAPI::executeCommand(const std::string& command, const FB::JSObjectPtr& callback) {

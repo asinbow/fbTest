@@ -7,11 +7,15 @@
             $(function(){
                 plugin = document.getElementById("asinbow")
                 $("#execute").click(function(){
-                    var result = "";
-                    $("#result").text(result);
-                    plugin.executeCommand($("#command").val(), function(slice) {
-                        result += slice;
-                        $("#result").text(result);
+                    $("#result").text("");
+                    plugin.executeCommand($("#command").val(), function(success, result) {
+                        if (success){
+                            $("#resultInfo").text(result.length);
+                            $("#result").text(result.toString());
+                        }else{
+                            $("#resultInfo").text("ERROR");
+                            $("#result").text(result);
+                        }
                     });
                 });
                 $('#command').keypress(function(e){
@@ -30,7 +34,7 @@
         </object>
         <input id="command" type="text" value="ls"/>
         <input id="execute" type="button" value="execute"/>
-        <pre id="result">
-        </pre>
+        <div id="resultInfo"></div>
+        <pre id="result"></pre>
     </body>
 </html>
