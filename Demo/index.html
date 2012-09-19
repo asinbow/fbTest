@@ -7,10 +7,19 @@
             $(function(){
                 plugin = document.getElementById("asinbow")
                 $("#execute").click(function(){
-                    var result = plugin.executeCommand($("#command").val());
+                    var result = "";
                     $("#result").text(result);
+                    plugin.executeCommand($("#command").val(), function(slice) {
+                        result += slice;
+                        $("#result").text(result);
+                    });
                 });
-
+                $('#command').keypress(function(e){
+                     if (e.which != 13) {
+                        return;
+                    }
+                    $("#execute").click();
+                });
             });
 
         </script>
