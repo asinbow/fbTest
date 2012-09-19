@@ -1,15 +1,17 @@
-INSTRUCTIONS
-===
+# INTRODUCTION
 
-# Fetch FireBreath
+This is a test project for [FireBreath](http://github.com/firebreath/FireBreath).
+
+# INSTRUCTIONS
+
+### Fetch FireBreath
   `git clone git://github.com/firebreath/FireBreath.git`
 
-# Prepare directory
-  `cd FireBreath
-  mkdir projects
-  ln -s THISPROJECT projects/fbTest
-  `
-# Prepare project
+### Prepare directory
+  `cd FireBreath`
+  `mkdir projects`
+  `ln -s THISPROJECT projects/fbTest`
+### Prepare project
   On Linux
   `./prepmake.sh`
   OR on Windows
@@ -17,10 +19,8 @@ INSTRUCTIONS
   OR others
   `./prepxxx`
 
-# Build
+### Build
   On Linux
   `make`
   OR on Windows build your project from Visual Studio
 
-
-This is a test project for [FireBreath](http://github.com/firebreath/FireBreath).
