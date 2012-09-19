@@ -74,7 +74,8 @@ public:
 
     // Method test-event
     void testEvent();
-	std::string executeCommand(const std::string& command);
+	void executeCommand(const std::string& command, const FB::JSObjectPtr& callback);
+	void executeCommandWork(const std::string& command, const FB::JSObjectPtr& callback);
 
 private:
     AsinbowWeakPtr m_plugin;

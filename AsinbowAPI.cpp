@@ -65,29 +65,31 @@ void AsinbowAPI::testEvent()
     fire_test();
 }
 
-std::string AsinbowAPI::executeCommand(const std::string& command)
-{
-	std::string result;
-    char buf[1024];
-
+void AsinbowAPI::executeCommandWork(const std::string& command, const FB::JSObjectPtr& callback) {
+    char buf[4096];
+    std::string result;
     FILE* pipe = popen(
 #ifdef _WIN32
-		utf8_to_ansi(command).c_str(),
+        utf8_to_ansi(command).c_str(),
 #else
-		command.c_str(),
+        command.c_str(),
 #endif
-		"r");
+        "r");
     if (pipe) {
         while (!feof(pipe)) {
-            size_t read = fread(buf, sizeof(char), 1024, pipe);
+            size_t read = fread(buf, sizeof(char), 4096, pipe);
             if (read>0) {
-				result += std::string(buf, read);
+                result += std::string(buf, read);
             }
         }
-		pclose(pipe);
+        pclose(pipe);
     }
 #ifdef _WIN32
-	result = ansi_to_utf8(result);
+    result = ansi_to_utf8(result);
 #endif
-	return result;
+    callback->Invoke("", FB::variant_list_of(result));
+}
+
+void AsinbowAPI::executeCommand(const std::string& command, const FB::JSObjectPtr& callback) {
+    boost::thread thread(boost::bind(&AsinbowAPI::executeCommandWork, this, command, callback));
 }
