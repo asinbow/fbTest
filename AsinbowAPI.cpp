@@ -68,7 +68,6 @@ void AsinbowAPI::testEvent()
 
 void AsinbowAPI::executeCommandWork(const std::string& command, const FB::JSObjectPtr& callback) {
     char buf[4096];
-    std::string result;
     FILE* pipe = popen(
 #ifdef _WIN32
         utf8_to_ansi(command).c_str(),
@@ -77,27 +76,23 @@ void AsinbowAPI::executeCommandWork(const std::string& command, const FB::JSObje
 #endif
         "r");
     if (!pipe) {
-        callback->Invoke("", FB::variant_list_of(false)("popen failed!"));
+        callback->Invoke("", FB::variant_list_of(true)("popen failed!"));
         return;
     }
-    while (!feof(pipe)) {
-        size_t read = fread(buf, sizeof(char), 4096, pipe);
-        if (read>0) {
-            result += std::string(buf, read*sizeof(char));
-        } else {
-            int error = ferror(pipe);
-            if (error) {
-                std::string e = boost::str(boost::format("read pipe error: %1%") % error);
-                callback->Invoke("", FB::variant_list_of(true)(e));
-                return;
-            }
+    std::string result;
+    int c;
+    while ((c = fgetc(pipe)) != EOF) {
+        result += (char)c;
+        if (c=='\n') {
+#ifdef _WIN32
+            result = ansi_to_utf8(result);
+#endif
+            callback->Invoke("", FB::variant_list_of(false)(result));
+            result = "";
         }
     }
     pclose(pipe);
-#ifdef _WIN32
-    result = ansi_to_utf8(result);
-#endif
-    callback->Invoke("", FB::variant_list_of(true)(result));
+    callback->Invoke("", FB::variant_list_of(true));
 }
 
 void AsinbowAPI::executeCommand(const std::string& command, const FB::JSObjectPtr& callback) {

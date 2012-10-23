@@ -8,13 +8,10 @@
                 plugin = document.getElementById("asinbow")
                 $("#execute").click(function(){
                     $("#result").text("");
-                    plugin.executeCommand($("#command").val(), function(success, result) {
-                        if (success){
-                            $("#resultInfo").text(result.length);
-                            $("#result").text(result.toString());
+                    plugin.executeCommand($("#command").val(), function(ended, result) {
+                        if (ended){
                         }else{
-                            $("#resultInfo").text("ERROR");
-                            $("#result").text(result);
+                            $("#result").text($("#result").text() + result);
                         }
                     });
                 });
